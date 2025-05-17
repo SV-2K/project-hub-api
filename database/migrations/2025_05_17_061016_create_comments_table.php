@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignId('task_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->timestamps();
             $table->text('comment');
+            $table->timestamps();
         });
     }
 
