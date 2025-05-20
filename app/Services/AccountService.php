@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Facades\Account;
 use App\Http\Resources\User\AccountResource;
 use App\Models\User;
+use \Illuminate\Http\JsonResponse;
 
 class AccountService
 {
@@ -18,5 +19,19 @@ class AccountService
             ]);
 
         return new AccountResource($user);
+    }
+
+    public function signIn(array $data): JsonResponse|array
+    {
+        if (!auth()->attempt($data)) {
+            return response()->json([
+                'message' => 'Invalid user credentials'
+            ], 400);
+        }
+
+        $token = auth()->user()->createToken('api-token')->plainTextToken;
+        return [
+            'token' => $token
+        ];
     }
 }
