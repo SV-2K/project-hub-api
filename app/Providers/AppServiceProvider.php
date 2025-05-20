@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Resources\User\AccountResource;
 use App\Services\AccountService;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        AccountResource::withoutWrapping();
     }
 }
