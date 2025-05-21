@@ -23,6 +23,6 @@ class AccountController extends Controller
 
     public function logout()
     {
-
+        auth()->user()->currentAccessToken()->delete();
     }
 }

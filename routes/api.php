@@ -7,20 +7,24 @@ use App\Http\Controllers\api\v1\AccountController;
 use App\Http\Controllers\api\v1\TaskController;
 use App\Http\Controllers\api\v1\CommentController;
 
-Route::prefix('/v1')->group(function () {
-    Route::controller(AccountController::class)
-        ->withoutMiddleware('auth:sanctum')
-        ->group(function () {
-        Route::post('/register', 'register');
-        Route::post('/login', 'login');
-        Route::get('/logout', 'logout');
-    });
+Route::prefix('/v1')
+    ->group(function () {
+        Route::controller(AccountController::class)
+            ->group(function () {
+                Route::post('/register', 'register');
+                Route::post('/login', 'login');
+            });
 
-    Route::apiResource('projects', ProjectController::class);
-    Route::post('/projects/{project}/assign', [ProjectController::class, 'assign']);
+        Route::middleware('auth:sanctum')
+            ->group(function () {
+                Route::get('/logout', [AccountController::class, 'logout']);
 
-    Route::apiResource('tasks', TaskController::class);
+                Route::apiResource('projects', ProjectController::class);
+                Route::post('/projects/{project}/assign', [ProjectController::class, 'assign']);
 
-    Route::apiResource('comments', CommentController::class)
-        ->except('show', 'update');
+                Route::apiResource('tasks', TaskController::class);
+
+                Route::apiResource('comments', CommentController::class)
+                    ->except('show', 'update');
+        });
 });
