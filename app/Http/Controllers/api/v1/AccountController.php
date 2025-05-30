@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
-    public function register(RegisterRequest $request): AccountResource
+    public function register(RegisterRequest $request): array
     {
         return $request->register();
     }

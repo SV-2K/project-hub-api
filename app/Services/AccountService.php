@@ -18,7 +18,12 @@ class AccountService
                 'password' => $data['password']['value']
             ]);
 
-        return new AccountResource($user);
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return [
+            'user' => new AccountResource($user),
+            'token' => $token
+        ];
     }
 
     public function signIn(array $data): JsonResponse|array
