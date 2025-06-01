@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Resources\User\AccountResource;
 use App\Services\AccountService;
+use App\Services\ProjectService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind('account_service', AccountService::class);
+        $this->app->bind('project_service', ProjectService::class);
     }
 
     /**

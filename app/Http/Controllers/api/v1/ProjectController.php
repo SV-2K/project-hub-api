@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Project\StoreRequest;
+use App\Http\Resources\Project\ProjectResource;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -12,9 +15,9 @@ class ProjectController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request): ProjectResource
     {
-        //
+        return $request->store();
     }
 
     public function show(string $id)
