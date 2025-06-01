@@ -20,9 +20,9 @@ class ProjectController extends Controller
         return $request->store();
     }
 
-    public function show(string $id)
+    public function show(Project $project): ProjectResource
     {
-        //
+        return new ProjectResource($project);
     }
 
     public function update(Request $request, string $id)
@@ -30,9 +30,9 @@ class ProjectController extends Controller
         //
     }
 
-    public function destroy(string $id)
+    public function destroy(Project $project)
     {
-        //
+        $project->delete();
     }
 
     public function assign()
