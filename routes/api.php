@@ -16,13 +16,15 @@ Route::prefix('/v1')
             });
 
         Route::middleware('auth:sanctum')
+
             ->group(function () {
                 Route::get('/logout', [AccountController::class, 'logout']);
 
                 Route::apiResource('projects', ProjectController::class);
                 Route::post('/projects/{project}/assign', [ProjectController::class, 'assign']);
 
-                Route::apiResource('tasks', TaskController::class);
+                Route::apiResource('projects.tasks', TaskController::class)
+                    ->shallow();
 
                 Route::apiResource('comments', CommentController::class)
                     ->except('show', 'update');
