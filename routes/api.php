@@ -26,7 +26,8 @@ Route::prefix('/v1')
                 Route::apiResource('projects.tasks', TaskController::class)
                     ->shallow();
 
-                Route::apiResource('comments', CommentController::class)
-                    ->except('show', 'update');
+                Route::apiResource('tasks.comments', CommentController::class)
+                    ->except('show', 'update')
+                    ->shallow();
         });
 });
