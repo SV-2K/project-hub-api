@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Project\AssignRequest;
 use App\Http\Requests\Project\StoreRequest;
 use App\Http\Requests\Project\UpdateRequest;
 use App\Http\Resources\Project\ProjectResource;
@@ -38,8 +39,8 @@ class ProjectController extends Controller
         $project->delete();
     }
 
-    public function assign()
+    public function assign(AssignRequest $request, Project $project): array
     {
-        // TODO
+        return $request->assign($project);
     }
 }

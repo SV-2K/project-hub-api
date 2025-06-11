@@ -11,6 +11,7 @@ use App\Models\Project as ProjectModel;
  *
  * @method static ProjectResource create(array $data)
  * @method static ProjectResource change(ProjectModel $project, array $data)
+ * @method static array assignUser(ProjectModel $project, array $data)
  */
 
 class Project extends Facade
