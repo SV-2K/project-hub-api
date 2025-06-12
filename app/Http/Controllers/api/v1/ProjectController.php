@@ -8,6 +8,7 @@ use App\Http\Requests\Project\StoreRequest;
 use App\Http\Requests\Project\UpdateRequest;
 use App\Http\Resources\Project\ProjectResource;
 use App\Models\Project;
+use App\Facades\Project as ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Collection;
@@ -16,7 +17,7 @@ class ProjectController extends Controller
 {
     public function index(): ResourceCollection
     {
-        return ProjectResource::collection(Project::all());
+        return ProjectService::list();
     }
 
     public function store(StoreRequest $request): ProjectResource

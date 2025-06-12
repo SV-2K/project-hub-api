@@ -4,10 +4,19 @@ namespace App\Services;
 
 use App\Http\Resources\Project\ProjectResource;
 use App\Models\Project;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 class ProjectService
 {
+    public function list(): ResourceCollection
+    {
+        $userProjects = Project::query()
+            ->where('user_id', '=', auth()->user()->id)
+            ->get();
+        return ProjectResource::collection($userProjects);
+    }
+
     public function create($data): ProjectResource
     {
         $project = Project::query()
