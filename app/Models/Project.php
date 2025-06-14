@@ -14,7 +14,7 @@ class Project extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'description'
+        'user_id', 'name', 'description'
     ];
 
     public function tasks(): HasMany

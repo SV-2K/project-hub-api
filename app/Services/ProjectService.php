@@ -20,7 +20,11 @@ class ProjectService
     public function create($data): ProjectResource
     {
         $project = Project::query()
-            ->create($data);
+            ->create([
+                'user_id' => auth()->user()->id,
+                'name' => $data['name'],
+                'description' => $data['description']
+            ]);
         return new ProjectResource($project);
     }
 
