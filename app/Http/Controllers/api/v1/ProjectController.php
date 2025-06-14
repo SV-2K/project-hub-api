@@ -12,6 +12,7 @@ use App\Facades\Project as ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectController extends Controller
 {
@@ -27,16 +28,19 @@ class ProjectController extends Controller
 
     public function show(Project $project): ProjectResource
     {
+        Gate::authorize('view', $project);
         return new ProjectResource($project);
     }
 
     public function update(UpdateRequest $request, Project $project): ProjectResource
     {
+        Gate::authorize('update', $project);
         return $request->change($project);
     }
 
     public function destroy(Project $project): void
     {
+        Gate::authorize('delete', $project);
         $project->delete();
     }
 
