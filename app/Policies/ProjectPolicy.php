@@ -41,4 +41,15 @@ class ProjectPolicy
             ? Response::allow()
             : Response::deny('Only owner can delete the project');
     }
+
+    public function assign(User $user, Project $project): Response
+    {
+        $userRole = $this->repository->getRole($user, $project);
+
+        return $user->id === $project->user_id
+            ||
+            $userRole === 'manager'
+            ? Response::allow()
+            : Response::deny('Only owner and managers can assign users to a project');
+    }
 }

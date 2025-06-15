@@ -46,6 +46,7 @@ class ProjectController extends Controller
 
     public function assign(AssignRequest $request, Project $project): array
     {
+        Gate::authorize('assign', $project);
         return $request->assign($project);
     }
 }
