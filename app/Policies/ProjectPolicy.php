@@ -20,12 +20,10 @@ class ProjectPolicy
         $userRole = $this->repository->getRole($user, $project);
 
         return $user->id === $project->user_id
-            ||
-            $userRole === 'executor'
-            ||
-            $userRole === 'manager'
+            || $userRole === 'executor'
+            || $userRole === 'manager'
             ? Response::allow()
-            : Response::deny('');
+            : Response::deny('You are not a part of this project');
     }
 
     public function update(User $user, Project $project): Response
@@ -47,8 +45,7 @@ class ProjectPolicy
         $userRole = $this->repository->getRole($user, $project);
 
         return $user->id === $project->user_id
-            ||
-            $userRole === 'manager'
+            || $userRole === 'manager'
             ? Response::allow()
             : Response::deny('Only owner and managers can assign users to a project');
     }
