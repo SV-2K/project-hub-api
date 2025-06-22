@@ -20,7 +20,7 @@ class TaskPolicy
 
     private function getProject(Task $task): Project
     {
-        return $task->project()->first();
+        return $task->project;
     }
 
     public function viewAny(User $user, Project $project): Response
@@ -47,7 +47,7 @@ class TaskPolicy
 
     public function delete(User $user, Task $task): Response
     {
-        $project = $task->project()->first();
+        $project = $this->getProject($task);
         return $this->canAccess($user, $project, ['manager'], 'Only managers can update tasks');
     }
 }

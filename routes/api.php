@@ -16,7 +16,6 @@ Route::prefix('/v1')
             });
 
         Route::middleware('auth:sanctum')
-
             ->group(function () {
                 Route::get('/logout', [AccountController::class, 'logout']);
 
