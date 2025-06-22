@@ -6,68 +6,48 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Traits\PolicyHelpers;
 use Illuminate\Auth\Access\Response;
 
 class TaskPolicy
 {
+    use PolicyHelpers;
+
     public function __construct(
         private UserRepository $repository
     )
     {}
 
+    private function getProject(Task $task): Project
+    {
+        return $task->project()->first();
+    }
+
     public function viewAny(User $user, Project $project): Response
     {
-        $userRole = $this->repository->getRole($user, $project);
-
-        return $user->id === $project->user_id
-            || $userRole === 'manager'
-            || $userRole === 'executor'
-            ? Response::allow()
-            : Response::deny('You are not a part of this project');
+        return $this->canAccess($user, $project, ['manager', 'executor']);
     }
 
     public function view(User $user, Task $task): Response
     {
-        $project = $task->project()->first();
-        $userRole = $this->repository->getRole($user, $project);
-
-        return $user->id === $project->user_id
-            || $userRole === 'manager'
-            || $userRole === 'executor'
-            ? Response::allow()
-            : Response::deny();
+        $project = $this->getProject($task);
+        return $this->canAccess($user, $project, ['manager', 'executor']);
     }
 
     public function create(User $user, Project $project): Response
     {
-        $userRole = $this->repository->getRole($user, $project);
-
-        return $user->id === $project->user_id
-            || $userRole === 'manager'
-            ? Response::allow()
-            : Response::deny('Only owner and managers can create tasks');
+        return $this->canAccess($user, $project, ['manager'], 'Only managers can create tasks');
     }
 
     public function update(User $user, Task $task): Response
     {
-        $project = $task->project()->first();
-        $userRole = $this->repository->getRole($user, $project);
-
-        return $user->id === $project->user_id
-        || $userRole === 'manager'
-        || $userRole === 'executor'
-            ? Response::allow()
-            : Response::deny('You can\'t update the task until you assigned to this project');
+        $project = $this->getProject($task);
+        return $this->canAccess($user, $project, ['manager', 'executor']);
     }
 
     public function delete(User $user, Task $task): Response
     {
         $project = $task->project()->first();
-        $userRole = $this->repository->getRole($user, $project);
-
-        return $user->id === $project->user_id
-        || $userRole === 'manager'
-            ? Response::allow()
-            : Response::deny('Only managers can update tasks');
+        return $this->canAccess($user, $project, ['manager'], 'Only managers can update tasks');
     }
 }

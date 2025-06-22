@@ -4,49 +4,29 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
-use App\Repositories\UserRepository;
+use App\Traits\PolicyHelpers;
 use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\DB;
 
 class ProjectPolicy
 {
-    public function __construct(
-        private UserRepository $repository
-    )
-    {}
-
+    use PolicyHelpers;
     public function view(User $user, Project $project): Response
     {
-        $userRole = $this->repository->getRole($user, $project);
-
-        return $user->id === $project->user_id
-            || $userRole === 'executor'
-            || $userRole === 'manager'
-            ? Response::allow()
-            : Response::deny('You are not a part of this project');
+        return $this->canAccess($user, $project, ['executor', 'manager']);
     }
 
     public function update(User $user, Project $project): Response
     {
-        return $user->id === $project->user_id
-            ? Response::allow()
-            : Response::deny('Only owner can update the project');
+        return $this->canAccess($user, $project, denyMessage: 'Only owner can update the project');
     }
 
     public function delete(User $user, Project $project): Response
     {
-        return $user->id === $project->user_id
-            ? Response::allow()
-            : Response::deny('Only owner can delete the project');
+        return $this->canAccess($user, $project, denyMessage: 'Only owner can delete the project');
     }
 
     public function assign(User $user, Project $project): Response
     {
-        $userRole = $this->repository->getRole($user, $project);
-
-        return $user->id === $project->user_id
-            || $userRole === 'manager'
-            ? Response::allow()
-            : Response::deny('Only owner and managers can assign users to a project');
+        return $this->canAccess($user, $project, ['manager'], 'Only owner and managers can assign users to a project');
     }
 }
