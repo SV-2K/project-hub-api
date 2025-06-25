@@ -18,38 +18,14 @@
 
 ### Установка
 
-Для установки необходимо
-
-Клонировать репозиторий:
-``` bash
-git clone https://github.com/SV-2K/project-hub-api
-```
-Перейти в папку проекта:
-``` bash
+```bash
+git clone https://github.com/SV-2K/project-hub-api.git
 cd project-hub-api
-```
-Установить зависимости Composer:
-```bash
 composer install
-```
-Скопировать файл .env.example в .env и настроить подключение к БД:
-```bash
 cp .env.example .env
-```
-Создать базу данных в MySQL:
-```bash
-mysql -u your_username -p -e "CREATE DATABASE project_hub;"
-```
-Сгенерировать ключ приложения:
-```bash
 php artisan key:generate
-```
-Выполнить миграции для создания таблиц:
-```bash
+# Указать параметры БД в .env
 php artisan migrate
-```
-Запустить сервер:
-```bash
 php artisan serve
 ```
 
