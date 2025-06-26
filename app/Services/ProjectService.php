@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\Project\ProjectResource;
 use App\Models\Project;
+use App\Models\Project as ProjectModel;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 
@@ -60,5 +61,13 @@ class ProjectService
                 'error' => 'this user is already assigned to this project'
             ];
         }
+    }
+
+    public function unassignUser(ProjectModel $project, int $userId): void
+    {
+        DB::table('assigned_users_roles')
+            ->where('user_id', '=', $userId)
+            ->where('project_id', '=', $project->id)
+            ->delete();
     }
 }

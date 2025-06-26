@@ -21,6 +21,7 @@ Route::prefix('/v1')
 
                 Route::apiResource('projects', ProjectController::class);
                 Route::post('/projects/{project}/assign', [ProjectController::class, 'assign']);
+                Route::post('/projects/{project}/unassign', [ProjectController::class, 'unassign']);
 
                 Route::apiResource('projects.tasks', TaskController::class)
                     ->shallow();
