@@ -2,22 +2,42 @@
 
 namespace App\Services;
 
+use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
+use App\Repositories\UserRepository;
 
 class TaskService
 {
-    public function create(int $projectId, array $data): Task
+    public function __construct(
+        private UserRepository $repository
+    )
+    {}
+
+    public function create(int $projectId, array $data): Task|array
     {
-        $task = Task::query()
-            ->create([
-                'project_id' => $projectId,
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'status' => $data['status'],
-                'priority' => $data['priority'],
-                'deadline' => $data['deadline'],
-                'assigned_user_id' => $data['assigned_user_id']
-            ]);
-        return $task;
+        $assignedUser = User::find($data['assigned_user_id']);
+        $project = Project::find($projectId);
+        $userRole = $this->repository->getRole($assignedUser, $project);
+
+        if (
+            $assignedUser->id === $project->user_id
+            || $userRole === 'manager'
+            || $userRole === 'executor'
+        ) {
+            return Task::query()
+                ->create([
+                    'project_id' => $projectId,
+                    'title' => $data['title'],
+                    'description' => $data['description'],
+                    'status' => $data['status'],
+                    'priority' => $data['priority'],
+                    'deadline' => $data['deadline'],
+                    'assigned_user_id' => $data['assigned_user_id']
+                ]);
+        }
+        return [
+            'message' => 'User must be assigned to the project'
+        ];
     }
 }

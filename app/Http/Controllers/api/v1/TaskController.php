@@ -20,7 +20,7 @@ class TaskController extends Controller
         return MinifiedTaskResource::collection($project->tasks()->get());
     }
 
-    public function store(StoreRequest $request, Project $project): Task
+    public function store(StoreRequest $request, Project $project): Task|array
     {
         Gate::authorize('create', [Task::class, $project]);
         return $request->store($project->id);

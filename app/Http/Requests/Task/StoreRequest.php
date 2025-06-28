@@ -20,7 +20,7 @@ class StoreRequest extends FormRequest
         ];
     }
 
-    public function store(int $projectId): Task
+    public function store(int $projectId): Task|array
     {
         return TaskService::create($projectId, $this->validated());
     }
