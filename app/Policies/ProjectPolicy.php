@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\User;
 use App\Traits\PolicyHelpers;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\DB;
 
 class ProjectPolicy
 {
@@ -28,5 +29,14 @@ class ProjectPolicy
     public function assign(User $user, Project $project): Response
     {
         return $this->canAccess($user, $project, ['manager'], 'Only owner and managers can assign users to a project');
+    }
+
+    public function unassign(User $user, Project $project, int $unassigningUserId): Response
+    {
+        // Assigned user can unassign himself from the project
+        if ($user->id === $unassigningUserId) {
+            return Response::allow();
+        }
+        return $this->canAccess($user, $project, ['manager']);
     }
 }

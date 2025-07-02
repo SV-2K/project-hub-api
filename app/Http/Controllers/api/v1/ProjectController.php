@@ -53,6 +53,7 @@ class ProjectController extends Controller
 
     public function unassign(UnassignRequest $request, Project $project): void
     {
+        Gate::authorize('unassign', [$project, $request->user_id]);
         ProjectService::unassignUser($project, $request->user_id);
     }
 }
