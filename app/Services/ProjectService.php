@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Http\Resources\Project\ProjectResource;
 use App\Models\Project;
 use App\Models\Project as ProjectModel;
+use App\Models\User;
+use App\Notifications\UserAssignedToProject;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 
@@ -41,17 +43,22 @@ class ProjectService
 
     public function assignUser(Project $project, array $data): array
     {
+        $user = User::query()
+            ->find($data['user_id']);
         $assignment = DB::table('assigned_users_roles')
-            ->where('user_id', '=', $data['user_id'])
-            ->where('project_id', '=', $project->id);
+            ->where('user_id', '=', $user->id)
+            ->where('project_id', '=', $project->id)
+            ->get();
 
-        if (empty($assignment->get()->toArray())) {
+        if ($assignment->isEmpty()) {
             DB::table('assigned_users_roles')
                 ->insert([
-                    'user_id' => $data['user_id'],
+                    'user_id' => $user->id,
                     'project_id' => $project->id,
                     'role_id' => $data['role_id']
                 ]);
+
+            $user->notify(new UserAssignedToProject($project));
 
             return [
                 'message' => 'success'
