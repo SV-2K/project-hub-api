@@ -6,6 +6,7 @@ use App\Http\Controllers\api\v1\ProjectController;
 use App\Http\Controllers\api\v1\AccountController;
 use App\Http\Controllers\api\v1\TaskController;
 use App\Http\Controllers\api\v1\CommentController;
+use App\Http\Controllers\api\v1\NotificationController;
 
 Route::prefix('/v1')
     ->group(function () {
@@ -18,6 +19,8 @@ Route::prefix('/v1')
         Route::middleware('auth:sanctum')
             ->group(function () {
                 Route::get('/logout', [AccountController::class, 'logout']);
+
+                Route::get('/notifications', [NotificationController::class, 'index']);
 
                 Route::apiResource('projects', ProjectController::class);
                 Route::post('/projects/{project}/assign', [ProjectController::class, 'assign']);
