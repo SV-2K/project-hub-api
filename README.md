@@ -30,10 +30,11 @@ php artisan serve
 ```
 
 ### Эндпоинты API
-#### Аутентификация
+#### Пользователь
 - `POST /api/v1/register` — Регистрация пользователя.
 - `POST /api/v1/login` — Аутентификация пользователя.
 - `POST /api/v1/logout` — Выход пользователя.
+- `POST /api/v1/notifications` — Уведомления пользователя.
 
 #### Проекты
 - `GET /api/v1/projects` — Список проектов.
@@ -42,6 +43,7 @@ php artisan serve
 - `PUT /api/v1/projects/{id}` — Обновление проекта.
 - `DELETE /api/v1/projects/{id}` — Удаление проекта.
 - `POST /api/v1/projects/{id}/assign` — Назначение пользователя на проект.
+- `POST /api/v1/projects/{id}/unassign` — Удаление ползователя из проекта.
 
 #### Задачи
 - `GET /api/v1/projects/{projectId}/tasks` — Список задач проекта.
