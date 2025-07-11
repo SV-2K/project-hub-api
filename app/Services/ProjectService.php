@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\Project as ProjectModel;
 use App\Models\User;
 use App\Notifications\UserAssignedToProject;
+use App\Notifications\UserAssignedToYourProject;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 
@@ -45,6 +46,9 @@ class ProjectService
     {
         $user = User::query()
             ->find($data['user_id']);
+        $projectOwner = User::query()
+            ->find($project->user_id);
+
         $assignment = DB::table('assigned_users_roles')
             ->where('user_id', '=', $user->id)
             ->where('project_id', '=', $project->id)
@@ -59,6 +63,7 @@ class ProjectService
                 ]);
 
             $user->notify(new UserAssignedToProject($project));
+            $projectOwner->notify(new UserAssignedToYourProject($project, $user));
 
             return [
                 'message' => 'success'
