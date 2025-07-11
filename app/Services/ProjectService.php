@@ -8,6 +8,8 @@ use App\Models\Project as ProjectModel;
 use App\Models\User;
 use App\Notifications\UserAssignedToProject;
 use App\Notifications\UserAssignedToYourProject;
+use App\Notifications\UserUnassignedFromProject;
+use App\Notifications\UserUnassignedFromYourProject;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 
@@ -77,9 +79,17 @@ class ProjectService
 
     public function unassignUser(ProjectModel $project, int $userId): void
     {
+        $user = User::query()
+            ->find($userId);
+        $projectOwner = User::query()
+            ->find($project->ures_id);
+
         DB::table('assigned_users_roles')
             ->where('user_id', '=', $userId)
             ->where('project_id', '=', $project->id)
             ->delete();
+
+        $user->notify(new UserUnassignedFromProject($project));
+        $projectOwner->notify(new UserUnassignedFromYourProject($project, $user));
     }
 }
