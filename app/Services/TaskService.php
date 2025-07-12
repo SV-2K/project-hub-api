@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\UserAssignToTask;
 use App\Repositories\UserRepository;
 
 class TaskService
@@ -25,16 +26,20 @@ class TaskService
             || $userRole === 'manager'
             || $userRole === 'executor'
         ) {
-            return Task::query()
+            $task = Task::query()
                 ->create([
-                    'project_id' => $projectId,
+                    'project_id' => $project->id,
                     'title' => $data['title'],
                     'description' => $data['description'],
                     'status' => $data['status'],
                     'priority' => $data['priority'],
                     'deadline' => $data['deadline'],
-                    'assigned_user_id' => $data['assigned_user_id']
+                    'assigned_user_id' => $assignedUser->id
                 ]);
+
+            $assignedUser->notify(new UserAssignToTask($task));
+
+            return $task;
         }
         return [
             'message' => 'User must be assigned to the project'
