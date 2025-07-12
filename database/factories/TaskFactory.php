@@ -19,6 +19,7 @@ class TaskFactory extends Factory
     {
         return [
             'project_id' => rand(1, 5),
+            'assigned_user_id' => rand(1, 10),
             'title' => fake()->sentence(3),
             'description' => fake()->text(),
             'status' => Arr::random(['in progress', 'completed', 'canceled']),
