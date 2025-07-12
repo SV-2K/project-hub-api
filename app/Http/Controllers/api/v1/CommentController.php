@@ -7,6 +7,8 @@ use App\Http\Requests\Comment\StoreRequest;
 use App\Http\Resources\Comment\CommentResource;
 use App\Models\Comment;
 use App\Models\Task;
+use App\Models\User;
+use App\Notifications\UserGotCommentOnTask;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Gate;
@@ -28,6 +30,11 @@ class CommentController extends Controller
                 'task_id' => $task->id,
                 'comment' => $request->comment
             ]);
+
+        $taskExecutor = User::query()
+            ->find($task->assigned_user_id);
+        $taskExecutor->notify(new UserGotCommentOnTask($task));
+
         return new CommentResource($comment);
     }
 
