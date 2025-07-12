@@ -19,7 +19,7 @@ class Task extends Model
         'status',
         'priority',
         'deadline',
-        'assigned_user'
+        'assigned_user_id'
     ];
 
     protected function casts()
